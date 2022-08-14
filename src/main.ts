@@ -16,7 +16,7 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
   await app.listen(3000);
-  Logger.log('Auth microservice running');
+  Logger.log('Auth microservice running', 'MainContext');
 }
 
-bootstrap();
+bootstrap().then();
