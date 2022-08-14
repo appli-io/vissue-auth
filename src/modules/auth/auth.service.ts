@@ -11,9 +11,9 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-  async validateUser(username: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<any> {
     try {
-      const user = await lastValueFrom(this.client.send({role: 'user', cmd: 'get'}, {username})
+      const user = await lastValueFrom(this.client.send({role: 'email', cmd: 'get'}, {email})
         .pipe(timeout(5000), catchError(err => {
           if (err instanceof TimeoutError) return throwError(() => new RequestTimeoutException());
           return throwError(() => err);
