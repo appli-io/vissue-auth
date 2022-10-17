@@ -6,7 +6,8 @@ import { AllExceptionFilter }  from '@infrastructure/common/filter/exceptions.fi
 import { LoggerService }       from '@infrastructure/logger/logger.service';
 import { ResponseInterceptor } from '@infrastructure/common/interceptor/response.interceptor';
 
-import { AppModule } from './app.module';
+import { AppModule }                      from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,6 +23,15 @@ async function bootstrap() {
       port: 4000
     }
   });
+
+  const config = new DocumentBuilder()
+    .setTitle('Vissue Authentication Microservice')
+    .setDescription('The Vissue Authentication Microservice API description')
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document); // http://localhost:port/api
 
   await app.startAllMicroservices();
   await app.listen(3000);
