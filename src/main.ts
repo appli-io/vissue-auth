@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
-import { Transport }   from '@nestjs/microservices';
-import { Logger }      from '@nestjs/common';
+import { Transport }              from '@nestjs/microservices';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 import { AllExceptionFilter }  from '@infrastructure/common/filter/exceptions.filter';
 import { LoggerService }       from '@infrastructure/logger/logger.service';
@@ -11,6 +11,14 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,                    // Ignorar datos que no esten en los DTO
+      forbidNonWhitelisted: true,         // Lanzar error si existen datos prohibidos
+      disableErrorMessages: true,         // Desabilitar mensajes de error (producción)
+    })
+  );
 
   app.useGlobalFilters(new AllExceptionFilter(new LoggerService()));
 
